@@ -30,6 +30,10 @@ func FindInDirectories(file string, directories []string) (string, error) {
 }
 
 func formatDirectories(directories []string) string {
+	if len(directories) == 0 {
+		return "No directories!"
+	}
+
 	return "- " + strings.Join(directories, "\n- ")
 }
 

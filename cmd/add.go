@@ -16,12 +16,9 @@ var addCmd = &cobra.Command{
 		newDirectories := append(GetDirectories(), newDirectory)
 
 		viper.Set(directoriesConfigKey, newDirectories)
+		cobra.CheckErr(viper.WriteConfig())
 
-		if err := viper.WriteConfig(); err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Printf("Set %s to:\n%s\n", directoriesConfigKey, formatDirectories(GetDirectories()))
-		}
+		fmt.Printf("Set %s to:\n%s\n", directoriesConfigKey, formatDirectories(GetDirectories()))
 	},
 }
 

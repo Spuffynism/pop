@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"os/exec"
 
@@ -28,16 +27,12 @@ var rootCmd = &cobra.Command{
 		project := args[0]
 
 		projectInDirectory, err := FindInDirectories(project, GetDirectories())
-
-		if err != nil {
-			fmt.Print(err)
-			os.Exit(0)
-		}
+		cobra.CheckErr(err)
 
 		openProject := exec.Command(GetEditor(), projectInDirectory)
 
 		if openProject.Run() != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 	},
 }

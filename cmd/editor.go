@@ -15,13 +15,11 @@ var editorCmd = &cobra.Command{
 	Short: "Editor used to pop open projects",
 	Run: func(cmd *cobra.Command, args []string) {
 		editor := args[0]
-		viper.Set(editorConfigKey, editor)
 
-		if err := viper.WriteConfig(); err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Printf("Set %s to '%s'\n", editorConfigKey, editor)
-		}
+		viper.Set(editorConfigKey, editor)
+		cobra.CheckErr(viper.WriteConfig())
+
+		fmt.Printf("Set %s to '%s'\n", editorConfigKey, editor)
 	},
 }
 
