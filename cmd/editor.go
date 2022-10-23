@@ -7,20 +7,26 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var editorConfigKey = "editor"
+
 var editorCmd = &cobra.Command{
 	Use:   "editor",
 	Args:  cobra.ExactArgs(1),
 	Short: "Editor used to pop open projects",
 	Run: func(cmd *cobra.Command, args []string) {
 		editor := args[0]
-		viper.Set("editor", editor)
+		viper.Set(editorConfigKey, editor)
 
 		if err := viper.WriteConfig(); err != nil {
 			fmt.Println(err)
 		} else {
-			fmt.Println("Set editor to '" + editor + "'")
+			fmt.Printf("Set %s to '%s'\n", editorConfigKey, editor)
 		}
 	},
+}
+
+func GetEditor() string {
+	return viper.GetString(editorConfigKey)
 }
 
 func init() {
