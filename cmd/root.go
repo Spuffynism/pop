@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 
@@ -40,9 +39,9 @@ var rootCmd = &cobra.Command{
 		}
 
 		openProject := exec.Command(GetEditor(), projectInDirectory)
-
-		if openProject.Run() != nil {
-			fmt.Println(err)
-		}
+		openProject.Stdin = os.Stdin
+		openProject.Stdout = os.Stdout
+		openProject.Stderr = os.Stderr
+		cobra.CheckErr(openProject.Run())
 	},
 }
