@@ -8,7 +8,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var addCmd = &cobra.Command{
+var addDirectoryCmd = &cobra.Command{
 	Use:   "add",
 	Args:  cobra.ExactArgs(1),
 	Short: "Add a directory",
@@ -32,5 +32,5 @@ var addCmd = &cobra.Command{
 }
 
 func init() {
-	directoryCmd.AddCommand(addCmd)
+	directoryCmd.AddCommand(addDirectoryCmd)
 }

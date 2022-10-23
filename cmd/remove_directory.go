@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-var removeCmd = &cobra.Command{
+var removeDirectoryCmd = &cobra.Command{
 	Use:   "remove",
 	Args:  cobra.ExactArgs(1),
 	Short: "Remove a directory",
@@ -38,5 +38,5 @@ var removeCmd = &cobra.Command{
 }
 
 func init() {
-	directoryCmd.AddCommand(removeCmd)
+	directoryCmd.AddCommand(removeDirectoryCmd)
 }

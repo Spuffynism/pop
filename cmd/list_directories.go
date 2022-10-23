@@ -5,7 +5,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var listCmd = &cobra.Command{
+var listDirectoriesCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List directories",
 	Run: func(cmd *cobra.Command, args []string) {
@@ -14,5 +14,5 @@ var listCmd = &cobra.Command{
 }
 
 func init() {
-	directoryCmd.AddCommand(listCmd)
+	directoryCmd.AddCommand(listDirectoriesCmd)
 }
