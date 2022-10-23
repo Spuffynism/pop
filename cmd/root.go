@@ -20,14 +20,24 @@ func init() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "pop [project]",
-	Args:  cobra.ExactArgs(1),
+	Use:   "pop [project] [branch]",
+	Args:  cobra.RangeArgs(1, 2),
 	Short: "Find & open project in directories",
 	Run: func(cmd *cobra.Command, args []string) {
 		project := args[0]
 
 		projectInDirectory, err := FindInDirectories(project, GetDirectories())
 		cobra.CheckErr(err)
+
+		if len(args) == 2 {
+			branch := args[1]
+
+			gitFetch := exec.Command("git", "-C", projectInDirectory, "fetch")
+			cobra.CheckErr(gitFetch.Run())
+
+			gitCheckout := exec.Command("git", "-C", projectInDirectory, "checkout", branch)
+			cobra.CheckErr(gitCheckout.Run())
+		}
 
 		openProject := exec.Command(GetEditor(), projectInDirectory)
 
