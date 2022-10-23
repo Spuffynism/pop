@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"os"
 )
 
 var removeCmd = &cobra.Command{
@@ -12,6 +13,14 @@ var removeCmd = &cobra.Command{
 	Short: "Remove a directory",
 	Run: func(cmd *cobra.Command, args []string) {
 		directoryToRemove := args[0]
+
+		if directoryToRemove == "." {
+			fullPathToCurrentDirectory, err := os.Getwd()
+			cobra.CheckErr(err)
+
+			directoryToRemove = fullPathToCurrentDirectory
+		}
+
 		newDirectories := []string{}
 		for _, directory := range GetDirectories() {
 			if directory == directoryToRemove {

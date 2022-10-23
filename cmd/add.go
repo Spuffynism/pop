@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/viper"
+	"os"
 
 	"github.com/spf13/cobra"
 )
@@ -13,6 +14,14 @@ var addCmd = &cobra.Command{
 	Short: "Add a directory",
 	Run: func(cmd *cobra.Command, args []string) {
 		newDirectory := args[0]
+
+		if newDirectory == "." {
+			fullPathToCurrentDirectory, err := os.Getwd()
+			cobra.CheckErr(err)
+
+			newDirectory = fullPathToCurrentDirectory
+		}
+
 		newDirectories := append(GetDirectories(), newDirectory)
 
 		viper.Set(directoriesConfigKey, newDirectories)
