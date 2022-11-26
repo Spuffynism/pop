@@ -7,9 +7,9 @@ import (
 	"io/ioutil"
 )
 
-var listConfigCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List the current configuration",
+var showConfigCmd = &cobra.Command{
+	Use:   "show",
+	Short: "Show the current configuration",
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := ioutil.ReadFile(viper.ConfigFileUsed())
 		cobra.CheckErr(err)
@@ -19,5 +19,5 @@ var listConfigCmd = &cobra.Command{
 }
 
 func init() {
-	configCmd.AddCommand(listConfigCmd)
+	configCmd.AddCommand(showConfigCmd)
 }
