@@ -10,7 +10,7 @@ import (
 var editorConfigKey = "editor"
 
 var editorCmd = &cobra.Command{
-	Use:   "editor",
+	Use:   "editor [editor]",
 	Args:  cobra.ExactArgs(1),
 	Short: "Editor used to pop open projects",
 	Run: func(cmd *cobra.Command, args []string) {
