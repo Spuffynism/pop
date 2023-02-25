@@ -1,4 +1,4 @@
-import { showToast, Toast, closeMainWindow, confirmAlert } from "@raycast/api";
+import { showToast, Toast, closeMainWindow } from "@raycast/api";
 import { execa } from "execa";
 import { shellEnv } from "shell-env";
 
@@ -23,6 +23,11 @@ export default async (props: { arguments: PopArguments }) => {
 };
 
 const pop = async (project: string, branch?: string) => {
-  const { PATH: path } = await shellEnv();
-  return execa(`pop ${project} ${branch}`, { env: { PATH: path }, shell: true, detached: true, cleanup: false });
+  let { PATH, LC_ALL } = await shellEnv();
+
+  if (!LC_ALL.includes(".UTF-8")) {
+    LC_ALL += ".UTF-8";
+  }
+
+  return execa(`pop ${project} ${branch}`, { env: { PATH, LC_ALL }, shell: true, detached: true, cleanup: false });
 };
