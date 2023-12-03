@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"errors"
+	"fmt"
+	"github.com/spf13/cobra"
+	"net/url"
 	"os"
 	"os/exec"
-
-	"github.com/spf13/cobra"
+	"strings"
 )
 
 func Execute() {
@@ -19,22 +22,22 @@ func init() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:   "pop [project] [branch]",
+	Use:   "pop {project [branch] | repositoryUrl}",
 	Args:  cobra.RangeArgs(1, 2),
-	Short: "Find & open project in directories",
+	Short: "Open project or repository in directories",
 	Run: func(cmd *cobra.Command, args []string) {
-		project := args[0]
-
-		projectInDirectory, err := FindInDirectories(project, GetDirectories())
+		parsedArgs, err := ParseFromParts(args)
+		fmt.Println(parsedArgs)
 		cobra.CheckErr(err)
 
-		if len(args) == 2 {
-			branch := args[1]
+		projectInDirectory, err := FindInDirectories(parsedArgs.Project, GetDirectories())
+		cobra.CheckErr(err)
 
+		if parsedArgs.HasBranch() {
 			gitFetch := exec.Command("git", "-C", projectInDirectory, "fetch")
 			cobra.CheckErr(gitFetch.Run())
 
-			gitCheckout := exec.Command("git", "-C", projectInDirectory, "checkout", branch)
+			gitCheckout := exec.Command("git", "-C", projectInDirectory, "checkout", parsedArgs.Branch)
 			cobra.CheckErr(gitCheckout.Run())
 		}
 
@@ -44,4 +47,51 @@ var rootCmd = &cobra.Command{
 		openProject.Stderr = os.Stderr
 		cobra.CheckErr(openProject.Run())
 	},
+}
+
+type Args struct {
+	Project string
+	Branch  string
+}
+
+func (args Args) HasBranch() bool {
+	return args.Branch != ""
+}
+
+func ParseFromParts(parts []string) (Args, error) {
+	projectOrRepository := parts[0]
+
+	var project = ""
+	var branch = ""
+
+	if !strings.Contains(projectOrRepository, "/") {
+		project = projectOrRepository
+	}
+
+	parsed, _ := url.Parse(projectOrRepository)
+	splitPathWithEmpties := strings.Split(parsed.Path, "/")
+	var splitPath []string
+	for i := range splitPathWithEmpties {
+		if splitPathWithEmpties[i] != "" {
+			splitPath = append(splitPath, splitPathWithEmpties[i])
+		}
+	}
+
+	if len(splitPath) >= 2 {
+		project = splitPath[1]
+	}
+
+	if len(splitPath) == 4 {
+		branch = strings.Join(splitPath[3:], "/")
+	}
+
+	if len(parts) == 2 {
+		branch = parts[1]
+	}
+
+	if project == "" {
+		return Args{}, errors.New("Could not parse project project")
+	}
+
+	return Args{project, branch}, nil
 }
