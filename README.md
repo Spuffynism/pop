@@ -3,16 +3,18 @@
 Pop open a project, wherever it is.
 
 ```shell
-> pop config directory add /projects1
-> pop config directory add /projects2
-> pop config editor vim
-> pop open project
-// opens project using vim
+pop config directory add /projects1
+pop config directory add /projects2
+pop config editor vim
+pop open project # opens project using vim
 ```
 
-## Installation
+## Setup
 
-`make install`
+```shell
+make build
+echo "PATH=\$PATH:$(pwd)" >> ~/.zshrc
+```
 
 ## Usage
 
